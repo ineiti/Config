@@ -1,0 +1,46 @@
+#!/bin/bash
+
+#set
+DIR_LIB=$( cd $( dirname ${BASH_SOURCE[0]} ); pwd )
+DIR=$( cd $( dirname ${BASH_SOURCE[1]} ); pwd )
+LINKFILES=$DIR
+cd $DIR
+
+inst(){
+  echo -n $1 "[Y/n]"
+  shift
+  read rep
+  if [ "$rep" == "n" -o "$rep" == "N" ]; then
+    echo Doing nothing
+  else
+    for cmd in "$@"; do
+      echo Running $cmd
+      $cmd
+    done
+  fi
+}
+
+link_c(){
+  inst "Installing $1 in $2" "rm -f $2/$1" "ln -s $LINKFILES/$1 $2/$1"
+}
+
+link(){
+  echo "Installing $1 in $2" 
+  rm -f $2/$1
+  ln -s $LINKFILES/$1 $2/$1
+}
+
+case $( cat /etc/issue ) in
+Debian*)
+  DIST_FULL=$( sed -e "s/^\(\w*\) [^ ]* \([0-9\.]*\) .*/\1_\2/" /etc/issue )
+  DIST_MAIN=${DIST_FULL%.*}
+  DIST=Debian
+  ;;
+Ubuntu*)
+  DIST_FULL=$( sed -e "s/^\(\w*\) \([0-9\.]*\) .*/\1_\2/" /etc/issue )
+  DIST_MAIN=${DIST_FULL%.*}
+  DIST=Ubuntu
+  ;;
+esac
+
+echo -e "\nInstalling for $DIR\n"
