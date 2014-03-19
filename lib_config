@@ -41,6 +41,11 @@ Ubuntu*)
   DIST_MAIN=${DIST_FULL%.*}
   DIST=Ubuntu
   ;;
+Arch*)
+  DIST_FULL="Arch Linux"
+  DIST_MAIN="Arch Linux"
+  DIST="Arch Linux"
+  ;;
 esac
 
 echo -e "\nInstalling for $DIR\n"
